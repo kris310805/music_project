@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        .stat-card { margin: 15px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: white; }
+        .stat-value { color: #2196F3; font-weight: bold; font-size: 1.5em; margin: 10px 0; }
+        .stat-label { color: #666; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if stats %}
+        <div>
+            <div class="stat-card">
+                <div class="stat-label">Всего треков в каталоге</div>
+                <div class="stat-value">🎵 {{ stats.total_tracks }}</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Средняя длительность трека</div>
+                <div class="stat-value">⏱️ {{ stats.avg_duration|floatformat:0 }} сек ({{ stats.avg_duration_min|floatformat:1 }} мин)</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Общая длительность всех треков</div>
+                <div class="stat-value">⏱️ {{ stats.total_duration|floatformat:0 }} сек ({{ stats.total_duration_min|floatformat:1 }} мин)</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Самый длинный трек</div>
+                <div class="stat-value">⏱️ {{ stats.longest_track }} сек ({{ stats.longest_track_min|floatformat:1 }} мин)</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Самый короткий трек</div>
+                <div class="stat-value">⏱️ {{ stats.shortest_track }} сек ({{ stats.shortest_track_min|floatformat:1 }} мин)</div>
+            </div>
+        </div>
+    {% else %}
+        <p>Статистика недоступна</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/aggregation-examples/">← К примерам агрегации</a> | <a href="/catalog/">На главную</a></p>
+</body>
+</html>

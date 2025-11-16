@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Свежие цифровые треки</title>
+</head>
+<body>
+    <h1>💿 Свежие цифровые треки</h1>
+    <p>Цифровые треки за последние 2 года ({{ current_year|add:"-2" }} - {{ current_year }})</p>
+    
+    {% if tracks %}
+        <ul>
+        {% for track in tracks %}
+            <li>
+                <strong>{{ track.title }}</strong>
+                - {{ track.release.artist.name }}
+                - {{ track.release.title }} ({{ track.release.release_year }})
+                - {{ track.get_duration }}
+                {% if track.genres.all %}
+                 - Жанры: {{ track.genres.all|join:", " }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Свежие цифровые треки не найдены</p>
+        <p>Добавьте цифровые релизы за последние 2 года через админку</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

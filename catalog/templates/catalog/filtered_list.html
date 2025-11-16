@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if items %}
+        <ul>
+        {% for item in items %}
+            <li>
+                <strong>{{ item.title }}</strong>
+                {% if item.artist %}
+                 - {{ item.artist.name }}
+                {% endif %}
+                {% if item.release_year %}
+                 ({{ item.release_year }})
+                {% endif %}
+                {% if item.format %}
+                 - {{ item.format }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ничего не найдено</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/admin/">Вернуться в админку</a></p>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        .stats-item { margin: 15px 0; padding: 15px; border-left: 4px solid #4CAF50; background: #f9f9f9; }
+        .stat-number { color: #2196F3; font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if objects %}
+        <div>
+        {% for obj in objects %}
+            <div class="stats-item">
+                {% if type == 'artist_stats' %}
+                    <h3>{{ obj.name }}</h3>
+                    <p>
+                        <span class="stat-number">📀 {{ obj.release_count }}</span> релизов |
+                        <span class="stat-number">🎵 {{ obj.avg_tracks_per_release|floatformat:1 }}</span> среднее количество треков в релизе
+                    </p>
+                    {% if obj.biography %}
+                        <p><em>{{ obj.biography|truncatewords:15 }}</em></p>
+                    {% endif %}
+                    
+                {% elif type == 'genre_stats' %}
+                    <h3>{{ obj.name }}</h3>
+                    <p>
+                        <span class="stat-number">🎵 {{ obj.track_count }}</span> треков
+                    </p>
+                    {% if obj.description %}
+                        <p><em>{{ obj.description|truncatewords:15 }}</em></p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>Данные не найдены</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/aggregation-examples/">← К примерам агрегации</a> | <a href="/catalog/">На главную</a></p>
+</body>
+</html>

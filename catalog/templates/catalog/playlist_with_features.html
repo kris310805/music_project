@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        .track-feature { border-left: 4px solid #4CAF50; padding: 10px; margin: 10px 0; background: #f9f9f9; }
+        .position { color: #2196F3; font-weight: bold; }
+        .note { font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
+        <h2>{{ playlist.title }}</h2>
+        <p><strong>Владелец:</strong> {{ playlist.user.username }}</p>
+        <p><strong>Треков:</strong> {{ playlist.track_count }}</p>
+        <p><strong>Общая длительность:</strong> {{ playlist.total_duration }}</p>
+    </div>
+    
+    <h3>Треки в плейлисте (через through модель):</h3>
+    
+    {% if track_features %}
+        <div>
+            {% for feature in track_features %}
+                <div class="track-feature">
+                    <p>
+                        <span class="position">#{{ feature.position }}</span>
+                        <strong>{{ feature.track.title }}</strong>
+                        - {{ feature.track.release.artist.name }}
+                        - ⏱️ {{ feature.track.get_duration }}
+                    </p>
+                    <p>
+                        <strong>Добавил:</strong> {{ feature.added_by.username }}
+                        <strong>Когда:</strong> {{ feature.added_at|date:"d.m.Y H:i" }}
+                    </p>
+                    {% if feature.note %}
+                        <p class="note">📝 {{ feature.note }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В плейлисте пока нет треков</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="{% url 'playlists-with-features' %}">← Назад к плейлистам</a></p>
+</body>
+</html>

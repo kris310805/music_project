@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Демонстрация get_absolute_url и reverse</title>
+</head>
+<body>
+    <h1>🔗 Демонстрация get_absolute_url и reverse</h1>
+    
+    <h2>📌 Пример reverse() для статических URL:</h2>
+    <ul>
+        <li><strong>Главная каталога:</strong> <a href="{{ catalog_url }}">{{ catalog_url }}</a></li>
+        <li><strong>Админка:</strong> <a href="{{ admin_url }}">{{ admin_url }}</a></li>
+    </ul>
+    
+    <h2>🎤 Исполнители (get_absolute_url):</h2>
+    {% if artists %}
+        <ul>
+        {% for artist in artists %}
+            <li>
+                <a href="{{ artist.get_absolute_url }}">{{ artist.name }}</a>
+                - URL: {{ artist.get_absolute_url }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет исполнителей</p>
+    {% endif %}
+    
+    <h2>💿 Релизы (get_absolute_url):</h2>
+    {% if releases %}
+        <ul>
+        {% for release in releases %}
+            <li>
+                <a href="{{ release.get_absolute_url }}">{{ release.title }}</a>
+                - {{ release.artist.name }}
+                - URL: {{ release.get_absolute_url }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет релизов</p>
+    {% endif %}
+    
+    <h2>🎵 Треки (get_absolute_url):</h2>
+    {% if tracks %}
+        <ul>
+        {% for track in tracks %}
+            <li>
+                <a href="{{ track.get_absolute_url }}">{{ track.title }}</a>
+                - {{ track.release.artist.name }}
+                - URL: {{ track.get_absolute_url }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет треков</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a></p>
+</body>
+</html>

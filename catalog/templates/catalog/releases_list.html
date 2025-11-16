@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if releases %}
+        <ul>
+        {% for release in releases %}
+            <li>
+                <strong>{{ release.title }}</strong>
+                - {{ release.artist.name }}
+                ({{ release.release_year }})
+                - {{ release.format }}
+                {% if release.label %}
+                 - Лейбл: {{ release.label.name }}
+                {% else %}
+                 - Без лейбла
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Релизы не найдены</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

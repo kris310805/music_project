@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Треки по исполнителю</title>
+</head>
+<body>
+    <h1>🎵 Треки по исполнителю</h1>
+    
+    <form method="get">
+        <label>Выберите исполнителя:</label>
+        <select name="artist">
+            <option value="">-- Все исполнители --</option>
+            {% for artist in artists %}
+                <option value="{{ artist.name }}" {% if selected_artist == artist.name %}selected{% endif %}>
+                    {{ artist.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Найти</button>
+    </form>
+    
+    {% if selected_artist %}
+        <h2>Треки исполнителя "{{ selected_artist }}":</h2>
+        {% if tracks %}
+            <ul>
+            {% for track in tracks %}
+                <li>
+                    <strong>{{ track.title }}</strong>
+                    - {{ track.release.title }} ({{ track.release.release_year }})
+                    - {{ track.get_duration }}
+                    {% if track.genres.all %}
+                     - Жанры: {{ track.genres.all|join:", " }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Треки не найдены для исполнителя "{{ selected_artist }}"</p>
+        {% endif %}
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

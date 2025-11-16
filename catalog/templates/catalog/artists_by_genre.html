@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Исполнители по жанру</title>
+</head>
+<body>
+    <h1>🎸 Исполнители по жанру</h1>
+    
+    <form method="get">
+        <label>Выберите жанр:</label>
+        <select name="genre">
+            <option value="">-- Все жанры --</option>
+            {% for genre in genres %}
+                <option value="{{ genre.name }}" {% if selected_genre == genre.name %}selected{% endif %}>
+                    {{ genre.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Найти</button>
+    </form>
+    
+    {% if selected_genre %}
+        <h2>Исполнители жанра "{{ selected_genre }}":</h2>
+        {% if artists %}
+            <ul>
+            {% for artist in artists %}
+                <li>
+                    <strong>{{ artist.name }}</strong>
+                    {% if artist.biography %} - {{ artist.biography|truncatewords:15 }}{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Исполнители не найдены для жанра "{{ selected_genre }}"</p>
+        {% endif %}
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

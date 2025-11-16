@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    
+    {% if type == 'artist' %}
+        <p><strong>Имя:</strong> {{ object.name }}</p>
+        {% if object.biography %}
+            <p><strong>Биография:</strong> {{ object.biography }}</p>
+        {% endif %}
+        <p><strong>Создан:</strong> {{ object.created_at|date:"d.m.Y H:i" }}</p>
+        
+    {% elif type == 'release' %}
+        <p><strong>Название:</strong> {{ object.title }}</p>
+        <p><strong>Исполнитель:</strong> {{ object.artist.name }}</p>
+        <p><strong>Год:</strong> {{ object.release_year }}</p>
+        <p><strong>Формат:</strong> {{ object.format }}</p>
+        {% if object.label %}
+            <p><strong>Лейбл:</strong> {{ object.label.name }}</p>
+        {% endif %}
+        
+    {% elif type == 'track' %}
+        <p><strong>Название:</strong> {{ object.title }}</p>
+        <p><strong>Исполнитель:</strong> {{ object.release.artist.name }}</p>
+        <p><strong>Релиз:</strong> {{ object.release.title }}</p>
+        <p><strong>Длительность:</strong> {{ object.get_duration }}</p>
+        {% if object.genres.all %}
+            <p><strong>Жанры:</strong> {{ object.genres.all|join:", " }}</p>
+        {% endif %}
+    {% endif %}
+    
+    <hr>
+    <p><strong>URL этой страницы:</strong> {{ request.build_absolute_uri }}</p>
+    <p><strong>Сгенерирован через get_absolute_url():</strong> {{ object.get_absolute_url }}</p>
+    
+    <hr>
+    <p><a href="/catalog/demonstrate-urls/">← К демонстрации URL</a> | <a href="/catalog/">На главную</a></p>
+</body>
+</html>

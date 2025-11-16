@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Исполнители по лейблу</title>
+</head>
+<body>
+    <h1>🎤 Исполнители по лейблу</h1>
+    
+    <form method="get">
+        <label>Выберите лейбл:</label>
+        <select name="label">
+            <option value="">-- Все лейблы --</option>
+            {% for label in labels %}
+                <option value="{{ label.name }}" {% if selected_label == label.name %}selected{% endif %}>
+                    {{ label.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Найти</button>
+    </form>
+    
+    {% if selected_label %}
+        <h2>Исполнители лейбла "{{ selected_label }}":</h2>
+        {% if artists %}
+            <ul>
+            {% for artist in artists %}
+                <li>
+                    <strong>{{ artist.name }}</strong>
+                    {% if artist.biography %} - {{ artist.biography|truncatewords:15 }}{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Исполнители не найдены для лейбла "{{ selected_label }}"</p>
+        {% endif %}
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

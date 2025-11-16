@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        .btn { display: inline-block; padding: 8px 12px; margin: 5px; text-decoration: none; border-radius: 4px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-danger { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+        <h2>{{ genre.name }}</h2>
+        {% if genre.description %}
+            <p><strong>Описание:</strong> {{ genre.description }}</p>
+        {% endif %}
+        <p><strong>Всего треков:</strong> {{ genre.tracks.count }}</p>
+    </div>
+    
+    {% if tracks %}
+        <h3>Треки в этом жанре:</h3>
+        <ul>
+            {% for track in tracks %}
+                <li>{{ track.title }} - {{ track.release.artist.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'genre-edit' genre.pk %}" class="btn btn-warning">✏️ Редактировать</a>
+        <a href="{% url 'genre-delete' genre.pk %}" class="btn btn-danger">🗑️ Удалить</a>
+        <a href="{% url 'genre-list' %}" class="btn btn-primary">📋 Назад к списку</a>
+    </div>
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a></p>
+</body>
+</html>

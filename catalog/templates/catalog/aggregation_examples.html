@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Примеры агрегации и аннотации</title>
+</head>
+<body>
+    <h1>📊 Примеры агрегации и аннотации</h1>
+    
+    <h2>🔢 Аннотация (Annotation) - добавляет поля к каждому объекту:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎤 Исполнители со статистикой</h3>
+        <p>Каждый исполнитель с количеством релизов и средним количеством треков</p>
+        <p><strong>Код:</strong> annotate(release_count=Count('releases'), avg_tracks=Avg('releases__tracks'))</p>
+        <a href="/catalog/aggregation/artists-stats/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Жанры по популярности</h3>
+        <p>Жанры с количеством треков в каждом</p>
+        <p><strong>Код:</strong> annotate(track_count=Count('tracks'))</p>
+        <a href="/catalog/aggregation/genres-stats/">Перейти →</a>
+    </div>
+    
+    <h2>📈 Агрегация (Aggregation) - общая статистика по всей таблице:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>📊 Статистика по трекам</h3>
+        <p>Общая статистика по всем трекам: количество, средняя длительность, самая длинный/короткий трек</p>
+        <p><strong>Код:</strong> aggregate(total=Count('id'), avg=Avg('duration_seconds'), max=Max(...))</p>
+        <a href="/catalog/aggregation/tracks-stats/">Перейти →</a>
+    </div>
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a></p>
+</body>
+</html>

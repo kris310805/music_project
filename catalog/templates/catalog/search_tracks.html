@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поиск треков</title>
+</head>
+<body>
+    <h1>🔎 Поиск треков</h1>
+    
+    <form method="get">
+        <label>Поиск (название трека или исполнителя):</label>
+        <input type="text" name="q" value="{{ query }}" placeholder="Введите название трека или исполнителя...">
+        <button type="submit">Искать</button>
+    </form>
+    
+    {% if query %}
+        <h2>Результаты поиска для "{{ query }}":</h2>
+        {% if tracks %}
+            <ul>
+            {% for track in tracks %}
+                <li>
+                    <strong>{{ track.title }}</strong>
+                    - {{ track.release.artist.name }}
+                    - {{ track.release.title }} ({{ track.release.release_year }})
+                    - {{ track.get_duration }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Ничего не найдено для "{{ query }}"</p>
+        {% endif %}
+    {% endif %}
+    <!-- Добавьте этот блок после формы поиска -->
+    {% if query %}
+        {% if tracks_exist %}
+            <p style="color: green;">✅ Найдено треков: {{ tracks|length }}</p>
+        {% else %}
+            <p style="color: red;">❌ По запросу "{{ query }}" треки не найдены</p>
+        {% endif %}
+    {% endif %}
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

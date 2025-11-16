@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ManyToMany through примеры</title>
+</head>
+<body>
+    <h1>🔗 ManyToManyField с through</h1>
+    
+    <div style="border: 1px solid #ccc; padding: 20px; margin: 15px 0;">
+        <h2>Что такое through модель?</h2>
+        <p>Through модель позволяет добавлять дополнительные поля в связь ManyToMany.</p>
+        
+        <h3>📝 Пример использования:</h3>
+        <pre>
+class TrackFeature(models.Model):
+    playlist = models.ForeignKey('Playlist', on_delete=models.CASCADE)
+    track = models.ForeignKey('Track', on_delete=models.CASCADE)
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+    position = models.IntegerField()
+    note = models.TextField(blank=True)
+
+class Playlist(models.Model):
+    tracks = models.ManyToManyField(
+        Track, 
+        through='TrackFeature',
+        through_fields=('playlist', 'track')
+    )
+        </pre>
+        
+        <h3>🎯 Преимущества:</h3>
+        <ul>
+            <li>Дополнительные поля в связи (позиция, заметки, время добавления)</li>
+            <li>Более гибкая структура данных</li>
+            <li>Возможность добавлять бизнес-логику в промежуточную модель</li>
+        </ul>
+        
+        <a href="{% url 'playlists-with-features' %}" style="background: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;">
+            🎵 Перейти к примерам плейлистов
+        </a>
+    </div>
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a></p>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ artist.name }}</h1>
+    
+    {% if social_links %}
+        <h2>Ссылки исполнителя:</h2>
+        <ul>
+        {% for link in social_links %}
+            <li>
+                <a href="{{ link.url }}" target="_blank" rel="noopener">
+                    {{ link.name }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>У исполнителя пока нет социальных ссылок</p>
+    {% endif %}
+    
+    <a href="{% url 'artist-detail' pk=artist.pk %}">← Назад к исполнителю</a>
+</body>
+</html>

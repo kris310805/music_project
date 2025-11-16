@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Музыкальный каталог - Примеры Django</title>
+</head>
+<body>
+    <h1>🎵 Музыкальный каталог</h1>
+    
+    <div style="background: #f5f5f5; padding: 15px; margin: 20px 0;">
+        <h3>📊 Статистика каталога:</h3>
+        <p>Исполнителей: {{ total_artists }} | Релизов: {{ total_releases }} | Треков: {{ total_tracks }}</p>
+        {% if total_artists == 0 %}
+            <p style="color: orange;">⚠️ Каталог пуст! Добавьте данные через <a href="/admin/">админку</a></p>
+        {% endif %}
+    </div>
+
+    <h2>📊 Примеры filter():</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Фильтрация релизов по году</h3>
+        <ul>
+            <li><a href="/catalog/releases/year/2023/">Релизы 2023 года</a></li>
+            <li><a href="/catalog/releases/year/2024/">Релизы 2024 года</a></li>
+            <li><a href="/catalog/releases/popular/">Популярные релизы (последние 5 лет)</a></li>
+            <li><a href="/catalog/releases/digital/recent/">Свежие цифровые релизы</a></li>
+        </ul>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Фильтрация треков по жанру</h3>
+        <ul>
+            <li><a href="/catalog/tracks/genre/Rock/">Треки в жанре Rock</a></li>
+            <li><a href="/catalog/tracks/genre/Pop/">Треки в жанре Pop</a></li>
+        </ul>
+    </div>
+    
+    <h2>🔍 Примеры использования __ (двойное подчеркивание):</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎤 Исполнители по лейблу</h3>
+        <p>Найти всех исполнителей, выпускавших релизы на определенном лейбле</p>
+        <p><strong>SQL:</strong> SELECT ... WHERE releases__label__name = 'Лейбл'</p>
+        <a href="/catalog/artists-by-label/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Треки по исполнителю</h3>
+        <p>Найти все треки определенного исполнителя</p>
+        <p><strong>SQL:</strong> SELECT ... WHERE release__artist__name = 'Исполнитель'</p>
+        <a href="/catalog/tracks-by-artist/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🔎 Поиск треков</h3>
+        <p>Поиск треков по названию или имени исполнителя</p>
+        <p><strong>SQL:</strong> WHERE title LIKE '%query%' OR release__artist__name LIKE '%query%'</p>
+        <a href="/catalog/search-tracks/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>💿 Свежие цифровые треки</h3>
+        <p>Цифровые треки за последние 2 года</p>
+        <p><strong>SQL:</strong> WHERE release__format = 'Digital' AND release__release_year >= 2022</p>
+        <a href="/catalog/recent-digital-tracks/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎸 Исполнители по жанру</h3>
+        <p>Найти исполнителей, у которых есть треки в определенном жанре</p>
+        <p><strong>SQL:</strong> WHERE releases__tracks__genres__name = 'Жанр'</p>
+        <a href="/catalog/artists-by-genre/">Перейти →</a>
+    </div>
+
+    <h2>🚫 Примеры использования exclude():</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Треки без жанров</h3>
+        <p>Треки, у которых не назначены жанры</p>
+        <p><strong>SQL:</strong> SELECT ... WHERE NOT (genres IS NOT NULL)</p>
+        <a href="/catalog/tracks/without-genres/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>💿 Релизы без лейбла</h3>
+        <p>Релизы, у которых не указан лейбл</p>
+        <p><strong>SQL:</strong> SELECT ... WHERE NOT (label_id IS NOT NULL)</p>
+        <a href="/catalog/releases/without-label/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎸 НЕ цифровые треки по жанру</h3>
+        <p>Треки определенного жанра, но НЕ в цифровом формате</p>
+        <p><strong>SQL:</strong> WHERE genres.name = 'Жанр' AND NOT (release.format = 'Digital')</p>
+        <ul>
+            <li><a href="/catalog/tracks/non-digital/genre/Rock/">Для жанра Rock</a></li>
+            <li><a href="/catalog/tracks/non-digital/genre/Pop/">Для жанра Pop</a></li>
+        </ul>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎤 Исполнители без релизов</h3>
+        <p>Исполнители, у которых нет ни одного релиза</p>
+        <p><strong>SQL:</strong> SELECT ... WHERE NOT (releases IS NOT NULL)</p>
+        <a href="/catalog/artists/without-releases/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>📋 Треки без позиции</h3>
+        <p>Треки без указанной позиции в релизе (A1, B2 и т.д.)</p>
+        <p><strong>SQL:</strong> WHERE NOT (position IS NOT NULL) AND NOT (position != '')</p>
+        <a href="/catalog/tracks/without-position/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>📀 Старые НЕ цифровые релизы</h3>
+        <p>Релизы НЕ в цифровом формате и старше 2 лет</p>
+        <p><strong>SQL:</strong> WHERE NOT (format = 'Digital') AND NOT (release_year >= 2022)</p>
+        <a href="/catalog/releases/old-non-digital/">Перейти →</a>
+    </div>
+
+    <h2>📈 Примеры использования order_by():</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>⏱️ Треки по длительности</h3>
+        <p>Треки отсортированные от самых коротких к самым длинным</p>
+        <p><strong>SQL:</strong> ORDER BY duration_seconds</p>
+        <a href="/catalog/tracks/order/duration/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>📅 Релизы по году выпуска</h3>
+        <p>Релизы отсортированные по году (новые сверху)</p>
+        <p><strong>SQL:</strong> ORDER BY release_year DESC</p>
+        <a href="/catalog/releases/order/year/">Перейти →</a>
+    </div>
+
+
+
+
+    <h2>🛠️ Примеры кастомных модельных менеджеров:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>⏱️ Длинные треки</h3>
+        <p>Треки длительностью более 4 минут (Track.custom.long_tracks())</p>
+        <p><strong>Код:</strong> Track.custom.long_tracks()</p>
+        <a href="/catalog/tracks/custom/long/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>💿 Цифровые релизы</h3>
+        <p>Только цифровые релизы (Release.custom.digital_only())</p>
+        <p><strong>Код:</strong> Release.custom.digital_only()</p>
+        <a href="/catalog/releases/custom/digital/">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🎵 Треки из недавних цифровых релизов</h3>
+        <p>Комбинация кастомных менеджеров</p>
+        <p><strong>Код:</strong> Release.custom.digital_only().custom.recent_releases(2)</p>
+        <a href="/catalog/tracks/custom/recent-digital/">Перейти →</a>
+    </div>
+
+
+    <h2>🔗 Демонстрация get_absolute_url и reverse:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>📎 Автоматические URL для моделей</h3>
+        <p>get_absolute_url() генерирует URL для каждого объекта</p>
+        <p><strong>Код:</strong> reverse('artist-detail', kwargs={'pk': self.pk})</p>
+        <a href="/catalog/demonstrate-urls/">Перейти к демонстрации →</a>
+    </div>
+    
+
+    <h2>📊 Примеры агрегации и аннотации:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>🔢 Статистика и аналитика</h3>
+        <p>Агрегация и аннотация для подсчета статистики</p>
+        <p><strong>Функции:</strong> Count(), Avg(), Sum(), Max(), Min()</p>
+        <a href="/catalog/aggregation-examples/">Перейти к примерам →</a>
+    </div>
+
+
+    <h2>🛠️ Примеры CRUD операций:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>Create, Read, Update, Delete</h3>
+        <p>Полный цикл операций с данными на сайте (не в админке)</p>
+        <p><strong>Операции:</strong> Создание, Просмотр, Редактирование, Удаление</p>
+        <a href="/catalog/crud-examples/">Перейти к примерам CRUD →</a>
+    </div>
+
+    <h2>🔗 ManyToManyField с through:</h2>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>Промежуточные модели</h3>
+        <p>ManyToMany связь с дополнительными полями через through модель</p>
+        <p><strong>Пример:</strong> Плейлисты с позицией треков, заметками и временем добавления</p>
+        <p><strong>Код:</strong> through='TrackFeature', through_fields=('playlist', 'track')</p>
+        <a href="/catalog/through-examples/">Перейти к примерам →</a>
+    </div>
+    <hr>
+    <p>
+        <a href="/admin/" style="background: #4CAF50; color: white; padding: 10px 15px; text-decoration: none;">
+            📁 Перейти в админку для добавления данных
+        </a>
+    </p>
+</body>
+</html>

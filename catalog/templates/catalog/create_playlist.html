@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создать плейлист</title>
+</head>
+<body>
+    <h1>Создать новый плейлист</h1>
+    
+    <form method="post" style="max-width: 400px;">
+        {% csrf_token %}
+        
+        <div style="margin: 15px 0;">
+            <label for="title">Название плейлиста:</label>
+            <input type="text" id="title" name="title" required style="width: 100%; padding: 8px;">
+        </div>
+        
+        <button type="submit" style="background: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px;">
+            Создать плейлист
+        </button>
+        <a href="{% url 'playlists-with-features' %}" style="padding: 10px 15px;">Отмена</a>
+    </form>
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a></p>
+</body>
+</html>

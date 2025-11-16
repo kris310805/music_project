@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if tracks %}
+        <h2>Треки:</h2>
+        <ul>
+        {% for track in tracks %}
+            <li>
+                <strong>{{ track.title }}</strong><br>
+                Исполнитель: {{ track.release.artist.name }}<br>
+                Релиз: {{ track.release.title }}<br>
+                Жанры: 
+                {% for genre in track.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    нет жанров
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if artists %}
+        <h2>Исполнители:</h2>
+        <ul>
+        {% for artist in artists %}
+            <li>
+                <strong>{{ artist.name }}</strong><br>
+                Релизы: 
+                {% for release in artist.releases.all %}
+                    "{{ release.title }}" ({{ release.release_year }}){% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    нет релизов
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if releases %}
+        <h2>Релизы:</h2>
+        <ul>
+        {% for release in releases %}
+            <li>
+                <strong>{{ release.title }}</strong><br>
+                Треки: 
+                {% for track in release.tracks.all %}
+                    "{{ track.title }}"{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    нет треков
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if playlists %}
+        <h2>Плейлисты:</h2>
+        <ul>
+        {% for playlist in playlists %}
+            <li>
+                <strong>{{ playlist.title }}</strong><br>
+                Треков: {{ playlist.tracks.count }}<br>
+                Треки: 
+                {% for track in playlist.tracks.all %}
+                    "{{ track.title }}"{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    нет треков
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

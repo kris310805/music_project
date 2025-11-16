@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if tracks %}
+        <ul>
+        {% for track in tracks %}
+            <li>
+                <strong>{{ track.title }}</strong>
+                - {{ track.release.artist.name }}
+                - ⏱️ {{ track.get_duration }}
+                - {{ track.release.title }} ({{ track.release.release_year }})
+                {% if track.genres.all %}
+                 - 🎵 {{ track.genres.all|join:", " }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Треки не найдены</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/catalog/">← На главную</a> | <a href="/admin/">📁 Админка</a></p>
+</body>
+</html>

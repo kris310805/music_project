@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    
+    {% if tracks %}
+        <h2>Треки:</h2>
+        <ul>
+        {% for track in tracks %}
+            <li>
+                {{ track.title }} - 
+                {{ track.release.artist.name }} -  <!-- Нет дополнительного запроса! -->
+                {{ track.release.title }}          <!-- Нет дополнительного запроса! -->
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if releases %}
+        <h2>Релизы:</h2>
+        <ul>
+        {% for release in releases %}
+            <li>
+                {{ release.title }} - 
+                {{ release.artist.name }}          <!-- Нет дополнительного запроса! -->
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if playlists %}
+        <h2>Плейлисты:</h2>
+        <ul>
+        {% for playlist in playlists %}
+            <li>
+                {{ playlist.title }} - 
+                {{ playlist.user.username }}       <!-- Нет дополнительного запроса! -->
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
