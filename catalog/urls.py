@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    
     
     # Примеры filter()
     path('releases/year/<int:year>/', views.releases_by_year, name='releases-by-year'),
@@ -119,4 +119,11 @@ path('demo/genre-stats/', views.genre_statistics_values, name='genre-stats-value
 # Массовые операции
 path('tracks/bulk-update/', views.bulk_update_tracks, name='bulk-update-tracks'),
 path('tracks/bulk-delete/', views.bulk_delete_old_tracks, name='bulk-delete-tracks'),
+
+# Главная страница
+path('', views.homepage, name='homepage'),
+    
+    # Поиск
+path('search/', views.search, name='search'),
+
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Playlist, Release, Track, Genre, Label
+from .models import Artist, Favorite, Playlist, Release, Track, Genre, Label
 from django.db.models import Q
 
 from django.contrib import messages
@@ -947,7 +947,7 @@ def artists_values_demo(request):
 
 def artists_values_list_demo(request):
     """Демонстрация values_list() - возвращает кортежи"""
-    # ✅ values_list() - только нужные поля как кортежи
+    # values_list() - только нужные поля как кортежи
     artists_tuples = Artist.objects.values_list('id', 'name')[:10]
     
     # ✅ values_list(flat=True) - для одного поля
@@ -1048,3 +1048,79 @@ def bulk_delete_old_tracks(request):
         'old_tracks_count': old_tracks_count,
         'title': 'Массовое удаление треков'
     })
+    
+    
+def homepage(request):
+    """Главная страница музыкального каталога с виджетами"""
+    
+    # 1. ВИДЖЕТ: Новые релизы (последние 5)
+    new_releases = Release.objects.select_related('artist').order_by('-id')[:5]
+    
+    # 2. ВИДЖЕТ: Избранные исполнители
+    featured_artists = Artist.objects.filter(featured=True)[:4]
+    
+    # 3. ВИДЖЕТ: Популярные треки (по play_count)
+    popular_tracks = Track.objects.select_related('release__artist').filter(
+        play_count__gt=0
+    ).order_by('-play_count')[:5]
+    
+    # 4. ВИДЖЕТ: Жанровая статистика (агрегатная функция COUNT)
+    from django.db.models import Count
+    genres_with_stats = Genre.objects.annotate(
+        track_count=Count('tracks')
+    ).order_by('-track_count')[:6]
+    
+    # 5. ВИДЖЕТ: Общая статистика (агрегатные функции)
+    stats = {
+        'total_artists': Artist.objects.count(),
+        'total_tracks': Track.objects.count(),
+        'total_releases': Release.objects.count(),
+        'most_popular_track': Track.objects.order_by('-play_count').first(),
+        'avg_track_duration': Track.objects.aggregate(
+            avg_duration=Avg('duration_seconds')
+        )['avg_duration']
+    }
+    
+    context = {
+        'new_releases': new_releases,
+        'featured_artists': featured_artists,
+        'popular_tracks': popular_tracks,
+        'genres_with_stats': genres_with_stats,
+        'stats': stats,
+        'title': 'MusicCatalog - Ваш музыкальный гид'
+    }
+    
+    return render(request, 'catalog/homepage.html', context)
+
+def search(request):
+    """Страница поиска по всему каталогу"""
+    query = request.GET.get('q', '')
+    results = {}
+    
+    if query:
+        # Поиск по трекам
+        results['tracks'] = Track.objects.filter(
+            Q(title__icontains=query) | 
+            Q(release__title__icontains=query)
+        ).select_related('release__artist')[:10]
+        
+        # Поиск по исполнителям
+        results['artists'] = Artist.objects.filter(
+            Q(name__icontains=query) | 
+            Q(biography__icontains=query)
+        )[:10]
+        
+        # Поиск по релизам
+        results['releases'] = Release.objects.filter(
+            Q(title__icontains=query) |
+            Q(artist__name__icontains=query)
+        ).select_related('artist')[:10]
+    
+    context = {
+        'query': query,
+        'results': results,
+        'has_results': any(results.values()),
+        'title': f'Поиск: {query}'
+    }
+    
+    return render(request, 'catalog/search.html', context)

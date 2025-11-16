@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #764ba2;
+            text-decoration: none;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            width: 400px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            background: #764ba2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+        }
+        
+        .search-hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .search-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .search-info {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        /* Results Sections */
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            color: #764ba2;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        /* Track Items */
+        .track-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .track-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .track-info {
+            flex: 1;
+        }
+        
+        .track-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .track-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .track-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        /* Artist Items */
+        .artist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+        }
+        
+        .artist-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .artist-bio {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Release Items */
+        .release-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+        }
+        
+        .release-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .release-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Badges */
+        .badge {
+            background: #764ba2;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .play-count {
+            background: #ff6b6b;
+        }
+        
+        .featured {
+            background: #ffd93d;
+            color: #333;
+        }
+        
+        .format {
+            background: #6bcf7f;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="{% url 'homepage' %}" class="logo">🎵 MusicCatalog</a>
+                <form class="search-form" action="{% url 'search' %}" method="get">
+                    <input type="text" name="q" class="search-input" value="{{ query }}" placeholder="Поиск треков, исполнителей, альбомов...">
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="search-hero">
+                <h1>🔍 Поиск по каталогу</h1>
+                {% if query %}
+                    <p>Результаты поиска для: "{{ query }}"</p>
+                {% else %}
+                    <p>Введите поисковый запрос выше</p>
+                {% endif %}
+            </section>
+
+            {% if query %}
+            <div class="search-info">
+                {% if has_results %}
+                    <p>🎉 Найдены результаты по вашему запросу</p>
+                {% else %}
+                    <p>😔 По запросу "{{ query }}" ничего не найдено</p>
+                    <p>Попробуйте изменить поисковый запрос или искать по другому ключевому слову</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Результаты: Треки -->
+            {% if results.tracks %}
+            <div class="results-section">
+                <h2 class="section-title">🎵 Треки ({{ results.tracks|length }})</h2>
+                <div class="results-grid">
+                    {% for track in results.tracks %}
+                    <div class="track-item">
+                        <div class="track-info">
+                            <div class="track-title">{{ track.title }}</div>
+                            <div class="track-meta">
+                                {{ track.release.artist.name }} • {{ track.release.title }}
+                            </div>
+                            <div class="track-stats">
+                                <span>🕐 {{ track.get_duration }}</span>
+                                {% if track.play_count > 0 %}
+                                <span>👂 {{ track.play_count }} прослушиваний</span>
+                                {% endif %}
+                                {% if track.featured %}
+                                <span class="badge featured">Рекомендуемый</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="track-actions">
+                            {% if track.status == 'published' %}
+                            <span class="badge">Опубликован</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Результаты: Исполнители -->
+            {% if results.artists %}
+            <div class="results-section">
+                <h2 class="section-title">🎤 Исполнители ({{ results.artists|length }})</h2>
+                <div class="results-grid">
+                    {% for artist in results.artists %}
+                    <div class="artist-item">
+                        <div class="artist-info">
+                            <div class="artist-name">{{ artist.name }}</div>
+                            <div class="artist-bio">
+                                {% if artist.biography %}
+                                    {{ artist.biography|truncatewords:20 }}
+                                {% else %}
+                                    Информация об исполнителе скоро появится...
+                                {% endif %}
+                            </div>
+                            <div class="track-stats">
+                                <span>🎵 {{ artist.releases.count }} релизов</span>
+                                {% if artist.featured %}
+                                <span class="badge featured">Избранный</span>
+                                {% endif %}
+                                {% if artist.popularity_score > 50 %}
+                                <span class="badge play-count">Популярный</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Результаты: Релизы -->
+            {% if results.releases %}
+            <div class="results-section">
+                <h2 class="section-title">💿 Релизы ({{ results.releases|length }})</h2>
+                <div class="results-grid">
+                    {% for release in results.releases %}
+                    <div class="release-item">
+                        <div class="release-info">
+                            <div class="release-title">{{ release.title }}</div>
+                            <div class="release-meta">
+                                {{ release.artist.name }} • {{ release.release_year }} • {{ release.format }}
+                            </div>
+                            <div class="track-stats">
+                                <span>🎵 {{ release.tracks.count }} треков</span>
+                                {% if release.featured %}
+                                <span class="badge featured">Рекомендуемый</span>
+                                {% endif %}
+                                {% if release.is_premium %}
+                                <span class="badge play-count">Премиум</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Нет результатов -->
+            {% if query and not has_results %}
+            <div class="results-section">
+                <div class="no-results">
+                    <div class="no-results-icon">🎵</div>
+                    <h3>Ничего не найдено</h3>
+                    <p>Попробуйте изменить поисковый запрос или воспользуйтесь другими ключевыми словами</p>
+                    <p>Вы можете искать по:</p>
+                    <ul style="text-align: left; display: inline-block; margin-top: 1rem;">
+                        <li>Названию трека</li>
+                        <li>Имени исполнителя</li>
+                        <li>Названию альбома</li>
+                        <li>Тексту в биографии</li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Пустой поиск -->
+            {% if not query %}
+            <div class="results-section">
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>Введите поисковый запрос</h3>
+                    <p>Используйте поле поиска вверху страницы чтобы найти музыку</p>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </main>
+</body>
+</html>

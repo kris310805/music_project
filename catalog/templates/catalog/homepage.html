@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #764ba2;
+            text-decoration: none;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            width: 300px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            background: #764ba2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+        }
+        
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .widget {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .widget h2 {
+            color: #764ba2;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .track-item, .artist-item, .release-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .track-item:last-child, .artist-item:last-child, .release-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.9);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="{% url 'homepage' %}" class="logo">🎵 MusicCatalog</a>
+                <form class="search-form" action="{% url 'search' %}" method="get">
+                    <input type="text" name="q" class="search-input" placeholder="Поиск треков, исполнителей, альбомов...">
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1>Открой мир музыки</h1>
+                <p>Тысячи треков, сотни исполнителей, бесконечные открытия</p>
+            </section>
+
+            <!-- Виджет 1: Новые релизы -->
+            <div class="widget">
+                <h2>🎵 Новые поступления</h2>
+                {% for release in new_releases %}
+                <div class="release-item">
+                    <div>
+                        <strong>{{ release.title }}</strong>
+                        <br>
+                        <small>{{ release.artist.name }} • {{ release.release_year }} • {{ release.format }}</small>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Пока нет новых релизов</p>
+                {% endfor %}
+            </div>
+
+            <!-- Виджет 2: Популярные треки -->
+            <div class="widget">
+                <h2>🔥 Самые популярные</h2>
+                {% for track in popular_tracks %}
+                <div class="track-item">
+                    <div>
+                        <strong>{{ track.title }}</strong>
+                        <br>
+                        <small>{{ track.release.artist.name }} • {{ track.get_duration }} • {{ track.play_count }} прослушиваний</small>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Пока нет популярных треков</p>
+                {% endfor %}
+            </div>
+
+            <!-- Виджет 3: Избранные исполнители -->
+            <div class="widget">
+                <h2>⭐ Избранные исполнители</h2>
+                {% for artist in featured_artists %}
+                <div class="artist-item">
+                    <div>
+                        <strong>{{ artist.name }}</strong>
+                        <br>
+                        <small>{{ artist.biography|truncatewords:10 }}</small>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Пока нет избранных исполнителей</p>
+                {% endfor %}
+            </div>
+
+            <!-- Виджет 4: Статистика -->
+            <div class="widget">
+                <h2>📊 Статистика платформы</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_artists }}</div>
+                        <div>Исполнителей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_tracks }}</div>
+                        <div>Треков</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_releases }}</div>
+                        <div>Релизов</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

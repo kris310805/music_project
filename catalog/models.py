@@ -77,6 +77,9 @@ class Artist(models.Model):
         help_text="Например: https://youtube.com/c/artistname"
     )
     
+    featured = models.BooleanField(default=False, verbose_name="Рекомендуемый")
+    popularity_score = models.IntegerField(default=0, verbose_name="Популярность")
+    
     class Meta:
         verbose_name = "Исполнитель"
         verbose_name_plural = "Исполнители"
@@ -209,6 +212,10 @@ class Release(models.Model):
     objects = models.Manager()  # Стандартный менеджер  
     custom = ReleaseManager()   # Кастомный менеджер
     
+    featured = models.BooleanField(default=False, verbose_name="Рекомендуемый релиз")
+    is_premium = models.BooleanField(default=False, verbose_name="Премиум релиз")
+    
+    
     class Meta:
         verbose_name = "Релиз"
         verbose_name_plural = "Релизы"
@@ -303,6 +310,10 @@ class Track(models.Model):
 
     objects = models.Manager()  # Стандартный менеджер
     custom = TrackManager()     # Кастомный менеджер
+    
+    play_count = models.IntegerField(default=0, verbose_name="Количество прослушиваний")
+    featured = models.BooleanField(default=False, verbose_name="Рекомендуемый трек")
+
     
     class Meta:
         verbose_name = "Трек"
@@ -510,3 +521,42 @@ class Document(models.Model):
         if self.file:
             return f"{self.file.size / 1024 / 1024:.2f} MB"
         return "0 MB"
+    
+
+# НОВАЯ МОДЕЛЬ - Рейтинги и отзывы
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 - Плохо'),
+        (2, '2 - Неплохо'),
+        (3, '3 - Хорошо'),
+        (4, '4 - Очень хорошо'),
+        (5, '5 - Отлично'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name="Трек")
+    rating = models.IntegerField(choices=RATING_CHOICES, verbose_name="Оценка")
+    comment = models.TextField(blank=True, verbose_name="Комментарий")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+        unique_together = ['user', 'track']  # Один отзыв на трек от пользователя
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.track.title} ({self.rating}/5)"
+
+# НОВАЯ МОДЕЛЬ - Избранное
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name="Трек")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранные треки"
+        unique_together = ['user', 'track']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.track.title}"
